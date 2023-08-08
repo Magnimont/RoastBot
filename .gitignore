@@ -1,4 +1,7 @@
-/.idea
-/venv
-/__pycache__
+.idea
+venv
+__pycache__
 .env
+.replit
+replit.nix
+.config
