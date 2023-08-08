@@ -129,6 +129,7 @@ async def _roast_battle(ctx: Context, prev_msg: discord.Message):
     def check(m: discord.Message):
         return m.author.id == ctx.author.id and m.channel.id == ctx.channel.id
 
+    prev_msg = None
     while convo.alive is True:
         try:
             msg: discord.Message = await bot.wait_for("message", check=check, timeout=300)
@@ -142,6 +143,8 @@ async def _roast_battle(ctx: Context, prev_msg: discord.Message):
                         return
                     await ctx.typing()
                     if msg.content.lower() in ["stop", "quit"]:
+                        if prev_msg:
+                            await prev_msg.edit(content=prev_msg.content, view=None)
                         await ctx.channel.send(
                             f"{ctx.author.mention} you're so lame bro, chickening out like this. "
                             f"But I wouldn't want to hurt your few little braincells much more, buh-bye."
@@ -162,7 +165,8 @@ async def _roast_battle(ctx: Context, prev_msg: discord.Message):
                     await ctx.reply("Too much to read. Send 250 characters maximum, no need to write a whole book about me!\nCome on, try again!")
                     break
                 else:
-                    await prev_msg.edit(content=prev_msg.content, view=None)
+                    if prev_msg:
+                        await prev_msg.edit(content=prev_msg.content, view=None)
                     rbc = RoastBattleCancel()
                     prev_msg = await msg.reply(response, view=rbc)
                     rbc.ctx = ctx
