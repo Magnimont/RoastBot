@@ -117,6 +117,7 @@ class RoastBattleCancel(discord.ui.View):
             await interaction.response.send_message("This is not your roast battle.", ephemeral=True)
             return
         self.convo.kill()
+        self.convo.killed = True
         await interaction.message.edit(content=interaction.message.content, view=None)
         await interaction.response.send_message("Boo, you're no fun.")
         return
@@ -134,6 +135,11 @@ async def _roast_battle(ctx: Context, prev_msg: discord.Message):
             response = None
             while response is None:
                 try:
+                    if hasattr(convo, "killed"):
+                        # on line 120 we set convo.killed to True, this attribute is not a standard attribute of the
+                        # Conversation class, so here we check if that attribute exists, and if it does, we have to
+                        # stop the command from running as the user clicked the stop button
+                        return
                     await ctx.typing()
                     if msg.content.lower() in ["stop", "quit"]:
                         await ctx.channel.send(
