@@ -163,4 +163,7 @@ replit.nix
 .config
 poetry.lock
 pyproject.toml
+
+# Exclude Deta Space configuration
 .space
+Spacefile
