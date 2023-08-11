@@ -6,7 +6,6 @@ from discord.ext.commands.errors import CommandOnCooldown
 from dotenv import load_dotenv
 from time import sleep, time
 from roastedbyai import Conversation, MessageLimitExceeded, CharacterLimitExceeded
-from site.app import run_app
 
 load_dotenv()
 
@@ -233,5 +232,4 @@ async def on_command_error(ctx, ex):
 
 
 if __name__ == "__main__":
-    run_app()
     bot.run(os.environ.get("TOKEN"), reconnect=True)
