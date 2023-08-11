@@ -156,7 +156,7 @@ async def _roast_battle(ctx: Context, prev_msg: discord.Message):
     if convo.alive:
         convo.kill()
 
-async def _roast_someone(ctx: Context, target: discord.Member | None = None):
+async def _roast_someone(ctx: Context, target: discord.Member = None):
     """Roast someone :smiling_imp:"""
     if target is None:
         dumb = [
