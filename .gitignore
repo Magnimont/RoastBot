@@ -167,3 +167,4 @@ pyproject.toml
 # Exclude Deta Space configuration
 .space
 Spacefile
+site
