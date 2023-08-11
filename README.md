@@ -1,4 +1,6 @@
 # RoastBot
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a>
+
 RoastBot is a Discord bot that uses the [RoastedByAI](https://pypi.org/project/roastedbyai) Python package
 to roast Discord users. The package uses AI to come up with clever
 answers to what the Discord users say to the bot. I guess you could say
@@ -74,4 +76,4 @@ Follow the underneath steps to do so:
 
 
 ## 📄 License
-This repository uses the [MIT License](https://github.com/noerrorstudio/roastbot/LICENSE).
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.

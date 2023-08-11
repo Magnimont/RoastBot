@@ -163,3 +163,4 @@ replit.nix
 .config
 poetry.lock
 pyproject.toml
+.space
