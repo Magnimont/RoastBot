@@ -6,11 +6,12 @@ from discord.ext.commands.errors import CommandOnCooldown
 from dotenv import load_dotenv
 from time import sleep, time
 from roastedbyai import Conversation, MessageLimitExceeded, CharacterLimitExceeded
+from flask_site import run_app
 
 load_dotenv()
 
 # Using the bot's ID in a mention as prefix
-bot = Bot(command_prefix="<@1102283936429785168> ", intents=discord.Intents.all())
+bot = Bot(command_prefix="<@857170119108722708> ", intents=discord.Intents.all())
 mc = MemberConverter()
 
 # Storing all the roasts in a variable
@@ -232,4 +233,5 @@ async def on_command_error(ctx, ex):
 
 
 if __name__ == "__main__":
+    run_app()
     bot.run(os.environ.get("TOKEN"), reconnect=True)
