@@ -12,6 +12,7 @@ load_dotenv()
 
 # Using the bot's ID in a mention as prefix
 bot = Bot(command_prefix="<@1102283936429785168> ", intents=discord.Intents.all(), help_command=None)
+bot.__version__ = "1.2.0"
 mc = MemberConverter()
 
 # Storing all the roasts in a variable
@@ -40,7 +41,7 @@ async def _roast(ctx: Context, target: str = None, *, style: str = "default"):
     > - `@mention` | `<username>`: roast someone else
 
     Parameters:
-    > - `style`: the tone the AI will talk with. Possibilities: "default", "crypto_bro", "new_york", "south_london", "surfer_dude", "valley_girl", "adult"
+    > - `style`: the tone the AI will talk with. Possibilities: "default", "crypto_bro", "new_york", "southern_american", "south_london", "surfer_dude", "valley_girl", "adult"
 
     Cooldown:
     > 30 seconds per user
