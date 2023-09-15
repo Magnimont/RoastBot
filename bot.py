@@ -5,13 +5,13 @@ from discord.ext.commands import Bot, Context, max_concurrency, BucketType, cool
 from discord.ext.commands.errors import CommandOnCooldown
 from dotenv import load_dotenv
 from time import sleep, time
-from roastedbyai import Conversation, MessageLimitExceeded, CharacterLimitExceeded
-from flask_site import run_app
+from roastedbyai import Conversation, MessageLimitExceeded, CharacterLimitExceeded, Style
+# from flask_site import run_app
 
 load_dotenv()
 
 # Using the bot's ID in a mention as prefix
-bot = Bot(command_prefix="<@857170119108722708> ", intents=discord.Intents.all())
+bot = Bot(command_prefix="<@1102283936429785168> ", intents=discord.Intents.all(), help_command=None)
 mc = MemberConverter()
 
 # Storing all the roasts in a variable
@@ -25,11 +25,12 @@ async def on_ready():
     print("Bot logged in as {}".format(bot.user))
 
 
-@bot.command(name="roast")
+@bot.command(name="roast", description="Start an AI roast session. Take turns in roasting the AI and the AI roasting you.")
 @max_concurrency(1, BucketType.user)
 @max_concurrency(4, BucketType.channel)
-@cooldown(1, 15, BucketType.user)
-async def _roast(ctx: Context, target: str = None):
+@max_concurrency(12, BucketType.guild)
+@cooldown(1, 30, BucketType.user)
+async def _roast(ctx: Context, target: str = None, *, style: str = "default"):
     """
     Start an AI roast session. Take turns in roasting the AI and the AI roasting you.
     If you want to stop, simply say "stop" or "quit".
@@ -38,12 +39,16 @@ async def _roast(ctx: Context, target: str = None):
     > - `me`: start a roast battle with the AI
     > - `@mention` | `<username>`: roast someone else
 
+    Parameters:
+    > - `style`: the tone the AI will talk with. Possibilities: "default", "crypto_bro", "new_york", "south_london", "surfer_dude", "valley_girl", "adult"
+
     Cooldown:
-    > Once every minute per user
+    > 30 seconds per user
 
     Concurrency:
     > Maximum of 1 session per user at the same time
     > Maximum of 4 sessions per channel at the same time
+    > Maximum of 12 sessions per server at the same time
     """
     if target != "me":
         try:
@@ -52,6 +57,10 @@ async def _roast(ctx: Context, target: str = None):
             target = None
         await _roast_someone(ctx, target)
         return
+    style = style.lower().replace(" ", "_")
+    if style not in Style.all:
+        await ctx.reply(f"That's not a valid style. Run `{bot.command_prefix}help roast` to see the full list")
+        return
     pb = PromptButtons()
     msg = await ctx.reply(
         "We'll be taking turns in trying to roast each other. Are you sure you can handle this and want to continue?",
@@ -59,12 +68,14 @@ async def _roast(ctx: Context, target: str = None):
     )
     pb.msg = msg
     pb.ctx = ctx
+    pb.style = style
 
 
 class PromptButtons(discord.ui.View):
     def __init__(self, *, timeout=180):
         self.msg: discord.Message = None
         self.ctx: Context = None
+        self.style: str = None
         super().__init__(timeout=timeout)
 
     @discord.ui.button(label="Confirm", style=discord.ButtonStyle.green)
@@ -76,7 +87,7 @@ class PromptButtons(discord.ui.View):
                             view=None)
         msg = await self.ctx.send(
             f"{self.ctx.author.mention} Alright, give me your best roast and we'll take turns.\nIf you want to stop, simply click the button or send \"stop\" or \"quit\".")
-        await _roast_battle(self.ctx, prev_msg=msg)
+        await _roast_battle(self.ctx, prev_msg=msg, style=self.style)
 
     @discord.ui.button(label="Cancel", style=discord.ButtonStyle.red)
     async def cancel_button(self, interaction: discord.Interaction, button: discord.ui.Button):
@@ -104,8 +115,8 @@ class RoastBattleCancel(discord.ui.View):
         return
 
 
-async def _roast_battle(ctx: Context, prev_msg: discord.Message):
-    convo = Conversation()
+async def _roast_battle(ctx: Context, prev_msg: discord.Message, *, style: str = Style.default):
+    convo = Conversation(style)
 
     def check(m: discord.Message):
         return m.author.id == ctx.author.id and m.channel.id == ctx.channel.id
@@ -232,6 +243,21 @@ async def on_command_error(ctx, ex):
         await ctx.reply(f"You're on cooldown, try again in **`{round(ex.retry_after, 1)}s`**")
 
 
+@bot.command(name="help", description="Shows the help menu.")
+async def help(ctx: Context, *, command: str = None):
+    """
+    Shows the help menu.
+    """
+    if command is None:
+        helpmsg = f"# {bot.user.display_name} Help Menu\n"
+        for cmd in bot.walk_commands():
+            helpmsg += f"## - `{cmd.qualified_name}`\n> {cmd.description or 'No description provided.'}\n"
+    else:
+        cmd = bot.get_command(command)
+        helpmsg = f"# `{command}`\n" + (cmd.help if cmd else "This command does not exist.")
+    await ctx.reply(helpmsg)
+
+
 if __name__ == "__main__":
-    run_app()
+    # run_app()
     bot.run(os.environ.get("TOKEN"), reconnect=True)
