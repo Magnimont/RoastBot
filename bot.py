@@ -15,7 +15,7 @@ load_dotenv()
 intents = discord.Intents.default()
 intents.message_content = True
 
-bot = Bot(commands_prefix="r!", intents=intents,help_command=None)
+bot = Bot(command_prefix="r!", intents=intents,help_command=None)
 bot.__version__ = "1.2.0"
 mc = MemberConverter()
 
