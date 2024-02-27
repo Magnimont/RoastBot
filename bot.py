@@ -1,7 +1,6 @@
 # Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (jvherck on GitHub)
 
-import discord, os, random, json 
-import discord.Intents
+import discord, os, random, json
 from discord.ext.commands import Bot, Context, max_concurrency, BucketType, cooldown, MemberConverter
 from discord.ext.commands.errors import CommandOnCooldown
 from dotenv import load_dotenv
@@ -12,10 +11,9 @@ from roastedbyai import Conversation, MessageLimitExceeded, CharacterLimitExceed
 load_dotenv()
 
 # Using the bot's ID in a mention as prefix
-bot =Bot(command_prefix="r!", intents=discord.Intents.default(Intents.message_content == True),help_command=None)
+bot = Bot(command_prefix="r!", intents=discord.Intents.all(), help_command=None)
 bot.__version__ = "1.2.0"
 mc = MemberConverter()
-
 
 # Storing all the roasts in a variable
 with open("database/roast.json", "r", encoding="UTF-8") as f:
