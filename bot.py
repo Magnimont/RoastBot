@@ -11,7 +11,11 @@ from roastedbyai import Conversation, MessageLimitExceeded, CharacterLimitExceed
 load_dotenv()
 
 # Using the bot's ID in a mention as prefix
-bot = Bot(command_prefix="<@1102283936429785168> ", intents=discord.Intents.all(), help_command=None)
+
+intents = discord.Intents.default()
+intents.message_content = True
+
+bot = Bot(command_prefix="r!", intents=intents,help_command=None)
 bot.__version__ = "1.2.0"
 mc = MemberConverter()
 
